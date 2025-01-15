@@ -12,12 +12,13 @@ on:
       - main
     paths:
       - 'jenkins_image/**'
+      - '.github/workflows/docker-image.yaml'
 
 env:
   IMAGE_NAME: "kcandidate/jenkins-casc"
 
 jobs:
-  build-and-scan:
+  build-scan-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
