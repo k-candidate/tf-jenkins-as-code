@@ -1,0 +1,73 @@
+---
+- name: Jenkins as code
+  hosts: all
+  become: yes
+  vars:
+    vm_username: "{{ vm_username }}"
+  tasks:
+    - name: Show Ansible version. For troubleshooting
+      debug:
+        msg: "Ansible version is  {{ ansible_version.full }}"
+
+    - name: Check if this playbook has rebooted the machine before
+      ansible.builtin.stat:
+        path: /var/tmp/ansible_rebooted_this_machine_before.txt
+      register: reboot_file
+
+    - name: Reboot on the playbook's first run to start fresh after the changes made by user data
+      ansible.builtin.reboot:
+        post_reboot_delay: 10
+        connect_timeout: 120
+      when: not reboot_file.stat.exists
+      register: reboot_result
+
+    - name: Create file to indicate reboot happened on the playbook's first run
+      ansible.builtin.file:
+        path: /var/tmp/ansible_rebooted_this_machine_before.txt
+        state: touch
+      when:
+        - reboot_file.stat.exists == false
+        - reboot_result is succeeded
+
+    - name: create NFS directory
+      ansible.builtin.file:
+        path: "/mnt/nfs"
+        state: directory
+        mode: 'u=rwx,g=rx,o=rx'
+
+    - name: Configure auto.master
+      ansible.builtin.lineinfile:
+        path: /etc/auto.master
+        line: "/mnt/nfs /etc/auto.nfs --ghost --timeout=60"
+        insertbefore: EOF
+        create: yes
+
+    - name: Configure autonfs
+      ansible.builtin.lineinfile:
+        path: /etc/auto.nfs
+        line: "jenkins_nfs -fstype=nfs4,rw 172.18.0.149:/exports/jenkins"
+        create: yes
+
+    - name: Restart and enable autofs service
+      ansible.builtin.systemd:
+        name: autofs
+        state: restarted
+        enabled: yes
+
+    - name: Copy Docker compose file
+      ansible.builtin.copy:
+        src: docker-compose.yml
+        dest: /home/{{ vm_username }}/docker-compose.yml
+
+    - name: CasC file
+      ansible.builtin.template:
+        src: casc.yml.j2
+        dest: /mnt/nfs/jenkins_nfs/casc.yaml
+
+    - name: Run Docker compose
+      community.docker.docker_compose_v2:
+        project_src: /home/{{ vm_username }}
+        files:
+          - docker-compose.yml
+        state: present
+      become_user: "{{ vm_username }}"

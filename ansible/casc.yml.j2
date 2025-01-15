@@ -1,0 +1,28 @@
+jenkins:
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: {{ jenkins_admin_id }}
+         password: {{ jenkins_admin_password }}
+  authorizationStrategy:
+    globalMatrix:
+      entries:
+      - user:
+          name: "admin"
+          permissions:
+          - "Overall/Administer"
+      - group:
+          name: "authenticated"
+          permissions:
+          - "Overall/Read"
+  remotingSecurity:
+    enabled: true
+security:
+  queueItemAuthenticator:
+    authenticators:
+    - global:
+        strategy: triggeringUsersAuthorizationStrategy
+unclassified:
+  location:
+    url: http://127.0.0.1:8080/
