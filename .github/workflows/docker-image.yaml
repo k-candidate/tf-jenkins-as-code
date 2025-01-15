@@ -64,11 +64,31 @@ jobs:
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
 
-      - name: Upload Trivy scan results to GitHub Security tab
+      - name: Delete previous Trivy results
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const { data: analyses } = await github.rest.codeScanning.listAnalysesForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tool_name: 'Trivy'
+            });
+            for (const analysis of analyses) {
+              await github.rest.codeScanning.deleteAnalysis({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                analysis_id: analysis.id
+              });
+            }
+
+      - name: Upload new Trivy scan results
         if: github.event_name == 'push'
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-results.sarif'
+          category: trivy
 
       - name: Login to DockerHub
         if: github.event_name == 'push'
