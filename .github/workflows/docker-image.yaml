@@ -17,7 +17,7 @@ env:
   IMAGE_NAME: "kcandidate/jenkins-casc"
 
 jobs:
-  build-and-scan:
+  build-scan-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -53,22 +53,6 @@ jobs:
 
       - name: Display Trivy scan results
         run: cat trivy-results.txt
-
-      - name: Run Trivy vulnerability scanner (SARIF output)
-        if: github.event_name == 'push'
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: '${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }}'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        if: github.event_name == 'push'
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: 'trivy-results.sarif'
 
       - name: Login to DockerHub
         if: github.event_name == 'push'
