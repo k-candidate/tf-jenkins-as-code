@@ -6,7 +6,7 @@ if [ -z $jenkins_admin_id ]; then
 fi
 
 if [ -z $jenkins_admin_password ]; then
-    read -sp "jenkins_admin_password value: " TF_VAR_jenkins_admin_password
+    read -sp "jenkins_admin_password value: " jenkins_admin_password
     export TF_VAR_jenkins_admin_password=$jenkins_admin_password
     echo 
 fi
