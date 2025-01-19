@@ -11,6 +11,11 @@ if [ -z $jenkins_admin_password ]; then
     echo 
 fi
 
+if [ -z $nfs_ip ]; then
+    read -p "nfs_ip value: " nfs_ip
+    export TF_VAR_nfs_ip=$nfs_ip
+fi
+
 terraform init
 if [ $? -ne 0 ]; then
     exit 1
