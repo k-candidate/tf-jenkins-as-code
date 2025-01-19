@@ -4,6 +4,9 @@
   become: yes
   vars:
     vm_username: "{{ vm_username }}"
+    nfs_ip: "{{ nfs_ip }}"
+    jenkins_admin_id: "{{ jenkins_admin_id }}"
+    jenkins_admin_password: "{{ jenkins_admin_password }}"
   tasks:
     - name: Show Ansible version. For troubleshooting
       debug:
@@ -45,7 +48,7 @@
     - name: Configure autonfs
       ansible.builtin.lineinfile:
         path: /etc/auto.nfs
-        line: "jenkins_nfs -fstype=nfs4,rw 172.18.0.149:/exports/jenkins"
+        line: "jenkins_nfs -fstype=nfs4,rw {{ nfs_ip }}:/exports/jenkins"
         create: yes
 
     - name: Restart and enable autofs service

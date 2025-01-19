@@ -46,10 +46,17 @@ variable "ssh_private_key" {
   default     = "~/.ssh/id_ed25519"
 }
 
+variable "nfs_ip" {
+  description = "IP of the NFS server"
+  type        = string
+}
+
 variable "jenkins_admin_id" {
-  type = string
+  description = "Jenkins admin username"
+  type        = string
 }
 
 variable "jenkins_admin_password" {
-  type = string
+  description = "Jenkins admin password"
+  type        = string
 }

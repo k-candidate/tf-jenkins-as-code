@@ -15,6 +15,7 @@ module "tf-module-kvm-vm" {
   use_ansible     = true
   extra_vars = {
     vm_username            = var.vm_username
+    nfs_ip                 = var.nfs_ip
     jenkins_admin_id       = var.jenkins_admin_id
     jenkins_admin_password = var.jenkins_admin_password
   }

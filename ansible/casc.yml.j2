@@ -3,8 +3,8 @@ jenkins:
     local:
       allowsSignup: false
       users:
-       - id: {{ jenkins_admin_id }}
-         password: {{ jenkins_admin_password }}
+      - id: {{ jenkins_admin_id }}
+        password: {{ jenkins_admin_password }}
   authorizationStrategy:
     globalMatrix:
       entries:
