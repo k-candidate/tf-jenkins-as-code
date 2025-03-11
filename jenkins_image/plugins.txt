@@ -7,6 +7,7 @@ credentials-binding:latest
 email-ext:latest
 git:latest
 github-branch-source:latest
+libvirt-slave:latest
 mailer:latest
 matrix-auth:latest
 pam-auth:latest
