@@ -1,6 +1,6 @@
 services:
   jenkins:
-    image: kcandidate/jenkins-casc:2025.03.11.2245-07f2a3d
+    image: kcandidate/jenkins-casc:2025.03.12.0122-4fea103
     container_name: jenkins
     ports:
       - 8080:8080
