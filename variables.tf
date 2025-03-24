@@ -60,3 +60,25 @@ variable "jenkins_admin_password" {
   description = "Jenkins admin password"
   type        = string
 }
+
+variable "s3_endpoint_url" {
+  description = "url for Minio S3 bucket"
+  type        = string
+  default     = "http://minio.devops.dom:9000"
+}
+
+variable "s3_access_key" {
+  description = "Access key id for Minio S3 bucket"
+  type        = string
+}
+
+variable "s3_secret_key" {
+  description = "Secret key for Minio S3 bucket"
+  type        = string
+}
+
+variable "p12_password" {
+  description = "Password of the p12 file"
+  type        = string
+  default     = "changeit"
+}

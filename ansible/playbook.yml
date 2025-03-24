@@ -7,6 +7,10 @@
     nfs_ip: "{{ nfs_ip }}"
     jenkins_admin_id: "{{ jenkins_admin_id }}"
     jenkins_admin_password: "{{ jenkins_admin_password }}"
+    s3_endpoint_url: "{{ s3_endpoint_url }}"
+    s3_access_key: "{{ s3_access_key }}"
+    s3_secret_key: "{{ s3_secret_key }}"
+    p12_password: "{{ p12_password }}"
   tasks:
     - name: Show Ansible version. For troubleshooting
       debug:
@@ -57,9 +61,37 @@
         state: restarted
         enabled: yes
 
+    - name: Download TLS files
+      amazon.aws.aws_s3:
+        endpoint_url: "{{ s3_endpoint_url }}"
+        bucket: devops
+        object: "certificates/{{ item }}"
+        dest: "/home/{{ vm_username }}/{{ item }}"
+        mode: get
+        access_key: "{{ s3_access_key }}"
+        secret_key: "{{ s3_secret_key }}"
+      loop:
+        - chain.pem
+        - end-entity-key.pem
+
+    - name: Convert PEM to PKCS12
+      ansible.builtin.command:
+        cmd: |
+          openssl pkcs12 -export -in /home/{{ vm_username }}/chain.pem 
+          -inkey /home/{{ vm_username }}/end-entity-key.pem 
+          -out /mnt/nfs/jenkins_nfs/keystore.p12 -name jenkins -passout pass:{{ p12_password }}
+
+    - name: Remove PEM files
+      ansible.builtin.file:
+        path: "/home/{{ vm_username }}/{{ item }}"
+        state: absent
+      loop:
+        - chain.pem
+        - end-entity-key.pem
+
     - name: Copy Docker compose file
-      ansible.builtin.copy:
-        src: docker-compose.yml
+      ansible.builtin.template:
+        src: docker-compose.yml.j2
         dest: /home/{{ vm_username }}/docker-compose.yml
 
     - name: CasC file

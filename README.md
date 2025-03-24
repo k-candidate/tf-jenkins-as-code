@@ -49,6 +49,10 @@ No resources.
 | <a name="input_jenkins_admin_password"></a> [jenkins\_admin\_password](#input\_jenkins\_admin\_password) | Jenkins admin password | `string` | n/a | yes |
 | <a name="input_network_name"></a> [network\_name](#input\_network\_name) | Name of the libvirt network where this machine will be provisioned | `string` | `"default"` | no |
 | <a name="input_nfs_ip"></a> [nfs\_ip](#input\_nfs\_ip) | IP of the NFS server | `string` | n/a | yes |
+| <a name="input_p12_password"></a> [p12\_password](#input\_p12\_password) | Password of the p12 file | `string` | `"changeit"` | no |
+| <a name="input_s3_access_key"></a> [s3\_access\_key](#input\_s3\_access\_key) | Access key id for Minio S3 bucket | `string` | n/a | yes |
+| <a name="input_s3_endpoint_url"></a> [s3\_endpoint\_url](#input\_s3\_endpoint\_url) | url for Minio S3 bucket | `string` | `"http://minio.devops.dom:9000"` | no |
+| <a name="input_s3_secret_key"></a> [s3\_secret\_key](#input\_s3\_secret\_key) | Secret key for Minio S3 bucket | `string` | n/a | yes |
 | <a name="input_ssh_private_key"></a> [ssh\_private\_key](#input\_ssh\_private\_key) | Private SSH key of the account | `string` | `"~/.ssh/id_ed25519"` | no |
 | <a name="input_ssh_public_key"></a> [ssh\_public\_key](#input\_ssh\_public\_key) | Public SSH key of the account | `string` | `"~/.ssh/id_ed25519.pub"` | no |
 | <a name="input_user_data"></a> [user\_data](#input\_user\_data) | File for cloud-init user data cfg | `string` | `"cloud-init/user-data.cfg"` | no |

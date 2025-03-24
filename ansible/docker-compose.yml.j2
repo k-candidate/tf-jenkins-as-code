@@ -3,7 +3,9 @@ services:
     image: kcandidate/jenkins-casc:2025.03.12.0122-4fea103
     container_name: jenkins
     ports:
-      - 8080:8080
+      - 443:8443
     volumes:
       - /mnt/nfs/jenkins_nfs/:/var/jenkins_home/
     restart: always
+    environment:
+      - JENKINS_OPTS=--httpPort=-1 --httpsPort=8443 --httpsKeyStore=/var/jenkins_home/keystore.p12 --httpsKeyStorePassword={{ p12_password }}
