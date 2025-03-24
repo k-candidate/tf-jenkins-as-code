@@ -18,5 +18,9 @@ module "tf-module-kvm-vm" {
     nfs_ip                 = var.nfs_ip
     jenkins_admin_id       = var.jenkins_admin_id
     jenkins_admin_password = var.jenkins_admin_password
+    s3_endpoint_url        = var.s3_endpoint_url
+    s3_access_key          = var.s3_access_key
+    s3_secret_key          = var.s3_secret_key
+    p12_password           = var.p12_password
   }
 }
